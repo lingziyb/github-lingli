@@ -1,0 +1,8 @@
+{
+  "name": "github-lingli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/lingziyb/github-lingli.git",
+  "author": "lingli",
+  "license": "MIT"
+}
