@@ -2,12 +2,9 @@
 
 declare namespace Models {
 
-    export interface IArticle {
-        title: string;
-        content: string;
+    export interface IUser {
+        avatar_url: string;
+        login: string
     }
 
-    export interface Abc {
-
-    }
 }
