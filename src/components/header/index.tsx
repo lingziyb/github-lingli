@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./index.less";
 import { Link } from "react-router-dom";
+import { useUserStore } from "../../common/store";
 
 export function Header() {
+  const user = useUserStore();
 
   return (
     <div className="c-header">
@@ -44,9 +46,7 @@ export function Header() {
 
         <div>+</div>
 
-        <div>
-          <img src="https://avatars2.githubusercontent.com/u/19299751?s=40&v=4" alt="" />
-        </div>
+        <img className="avatar" src={user.avatar_url} alt="" />
       </div>
     </div>
   );

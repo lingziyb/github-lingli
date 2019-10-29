@@ -1,10 +1,16 @@
 import React from "react";
 import "./index.less";
+import { useUserStore } from "../../../common/store";
 
 export default function HomeLeft() {
+  const user = useUserStore();
+
   return (
     <div className="home-left border-right ">
-      <div className="mb-3">lingziyb</div>
+      <div className="mb-3">
+        <img className="mr-1" src={`${user.avatar_url}&s=20`} alt="" />
+        {user.login}
+      </div>
       <div className="repository">
         <h2 className="f5 flex-justify-between">
           Repositories
