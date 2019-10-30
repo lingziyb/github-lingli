@@ -4,13 +4,13 @@ import HomeLeft from "../left";
 import HomeCenter from "../center";
 import HomeRight from "../right";
 import "./index.less";
-import { changeUser } from "../../../common/store";
+import { store } from "../../../common/store";
 
 export default function HomePage() {
   useEffect(() => {
     (async () => {
       const userInfo = await githubService.get<Models.IUser>("/users/lingziyb").then(data => data.data);
-      changeUser(userInfo);
+      store.user = userInfo;
     })();
   }, []);
 

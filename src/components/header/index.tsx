@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./index.less";
 import { Link } from "react-router-dom";
-import { useUserStore } from "../../common/store";
+import { useUser } from "../../common/store";
 
 export function Header() {
-  const user = useUserStore();
+  const user = useUser();
 
   return (
     <div className="c-header">
@@ -41,13 +41,15 @@ export function Header() {
         </ul>
       </div>
 
-      <div className="right">
-        <div>通知</div>
+      {user && (
+        <div className="right">
+          <div>通知</div>
 
-        <div>+</div>
+          <div>+</div>
 
-        <img className="avatar" src={user.avatar_url} alt="" />
-      </div>
+          <img className="avatar" src={user.avatar_url} alt="" />
+        </div>
+      )}
     </div>
   );
 }
