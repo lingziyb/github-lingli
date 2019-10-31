@@ -1,4 +1,4 @@
-import React, { useCallback, useState, ReactElement, useEffect, useRef } from "react";
+import React, { ReactElement, useCallback, useRef, useState, useMemo, useEffect } from "react";
 import { createPortal } from "react-dom";
 import "./index.less";
 import CModal from "./modal";
@@ -10,24 +10,25 @@ interface PopoverProps {
   children: ReactElement;
 }
 
+interface IPlace {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+}
+
 let popoverRoot: HTMLElement;
 
 export default function Popover(props: PopoverProps) {
   const { children } = props;
-
   const [visible, setVisible] = useState(false);
-  const modalRef = useRef<HTMLElement>(null);
-  const [offsetTop, setOffsetTop] = useState(0);
-  const [offsetLeft, setOffsetLeft] = useState(0);
+  const childRef = useRef<HTMLElement>(null);
+  const [place, setPlace] = useState<IPlace>({ top: 0, left: 0, width: 0, height: 0, x: 0, y: 0 });
 
-  useEffect(() => {
-    function handle() {
-      setVisible(false);
-    }
-    document.body.addEventListener("click", handle, false);
-    return () => {
-      document.body.removeEventListener("click", handle, false);
-    };
+  const onClose = useCallback(() => {
+    setVisible(false);
   }, []);
 
   const createPopover = useCallback(() => {
@@ -36,40 +37,32 @@ export default function Popover(props: PopoverProps) {
     }
 
     popoverRoot = document.createElement("div");
-    popoverRoot.style.cssText = ` position: absolute; width: 100%; top: 0; left: 0;`;
+    popoverRoot.style.cssText = `position: absolute; width: 100%; top: 0; left: 0;`;
 
     document.body.append(popoverRoot);
   }, []);
 
-  const changeChildren = useCallback(() => {
-    const newElement = React.cloneElement(children, {
-      onClick: () => {
-        createPopover();
-        setVisible(visible => !visible);
-        if (modalRef.current) {
-          setOffsetTop(modalRef.current.offsetTop);
-          setOffsetLeft(modalRef.current.offsetLeft);
-        }
-      },
-      ref: modalRef
-    });
-    return newElement;
-  }, []);
+  useEffect(() => {}, []);
+
+  const newElement = React.cloneElement(children, {
+    onClick() {
+      createPopover();
+      setVisible(visible => !visible);
+      if (childRef.current) {
+        const { offsetTop: top } = childRef.current;
+        const { left, width, height, x, y } = childRef.current.getBoundingClientRect();
+        console.log(999, childRef.current.getBoundingClientRect().top);
+
+        setPlace({ top, left, width, height, x, y });
+      }
+    },
+    ref: childRef
+  });
 
   return (
     <>
-      {changeChildren()}
-      {visible &&
-        createPortal(
-          <CModal
-            content={props.content}
-            visible={visible}
-            offsetLeft={offsetLeft}
-            offsetTop={offsetTop}
-            width={children.props.style && children.props.style.width.split("px")[0]}
-          />,
-          popoverRoot
-        )}
+      {newElement}
+      {visible && createPortal(<CModal onClose={onClose} content={props.content} place={place} />, popoverRoot)}
     </>
   );
 }
