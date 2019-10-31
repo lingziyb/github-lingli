@@ -31,6 +31,7 @@ export default function Popover(props: PopoverProps) {
     setVisible(false);
   }, []);
 
+  /** 创建一个popover元素，挂载到body上。 */
   const createPopover = useCallback(() => {
     if (popoverRoot) {
       return popoverRoot;
@@ -44,6 +45,7 @@ export default function Popover(props: PopoverProps) {
 
   useEffect(() => {}, []);
 
+  /** 包在popover里的孩子元素 */
   const newElement = React.cloneElement(children, {
     onClick() {
       createPopover();
@@ -51,7 +53,6 @@ export default function Popover(props: PopoverProps) {
       if (childRef.current) {
         const { offsetTop: top } = childRef.current;
         const { left, width, height, x, y } = childRef.current.getBoundingClientRect();
-        console.log(999, childRef.current.getBoundingClientRect().top);
 
         setPlace({ top, left, width, height, x, y });
       }
